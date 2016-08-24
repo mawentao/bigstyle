@@ -1,0 +1,15 @@
+<!--{template common/mwt_frame}-->
+<!--{template common/mwt_style}-->
+<script>
+jQuery(document).ready(function($) {
+	require(["jsapp","mwt"],function(jsapp){
+		var tid = "{$_GET['tid']}";
+		jsapp.run("forum/viewthread",tid);
+	});
+});
+</script>
+
+<!--{loop $postlist $post}-->
+<div id="oripaper-del" style="display:none;">{$post[message]}</div>
+<!--{eval break;}-->
+<!--{/loop}-->
