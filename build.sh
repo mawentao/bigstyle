@@ -11,7 +11,7 @@
 template_name="bigstyle"
 outdir="output/$template_name"
 tarname="$template_name.zip"
-src="dist-"`date +%s`
+src="dist-"`date +%Y%m%d%H%M%S`
 
 function cpfiles()
 {

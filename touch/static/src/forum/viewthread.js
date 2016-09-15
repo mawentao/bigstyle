@@ -38,7 +38,7 @@ define(function(require){
 				require('common/copyright').footer()+
 				'<div style="line-height:45px;">&nbsp;</div>'+
 				'<div id="headdiv" style="position:fixed;top:0;left:0;right:0;"></div>'+
-				'<div id="footdiv" style="position:fixed;bottom:0;left:0;right:0;">';
+				'<div id="footdiv" style="position:fixed;bottom:0;left:0;right:0;background:#fff;">';
 			jQuery("body").append(pagebody).css('background','#f2f2f2');
 
 			var topbar = header.createHeader({
@@ -147,7 +147,7 @@ define(function(require){
 						'<span style="margin:0 8px;display:inline-block;font-size:12px;color:#333;">'+post.author+'<br>'+
                         '<span style="float:left;font-size:11px;color:#999;">'+post.dateline+'</span></span>'+
 				      '</div>'+
-                      '<div class="weui_cell_ft" style="font-size:11px;color:#aaa">1楼'+
+                      '<div class="weui_cell_ft" style="font-size:11px;color:#aaa">楼主'+
                         delbtn+
                       '</div>'+
 					'</div>'+

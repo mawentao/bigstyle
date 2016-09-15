@@ -33,25 +33,39 @@ define(function(require){
             render: 'page-reply-'+tid, 
             header: header.createHeader({ items:[
 				{icon:'icon icon-left',iconStyle:'font-size:20px;margin-top:5px;',width:40,handler:function(){
-					//require("common/location").back("forum.php?forumlist=1");
 					h5page.close();
 				}},
 				{label:'<h1>发表回复</h1>'},
                 {label:'回复',width:40,handler:o.submit}
 			]}),
 			bodyStyle: "background-color:#f2f2f2;padding:0;",
-			pagebody: '<div class="weui_cells weui_cells_form">'+
+			pagebody: '<div class="weui_cells weui_cells_form" style="margin-top:0;">'+
 				'<div class="weui_cell"><div class="weui_cell_bd weui_cell_primary" id="contentdiv"></div></div>'+
+				// 工具栏
+				'<div class="weui_cell" style="padding:5px 15p"><div class="weui_cell_bd weui_cell_primary" style="text-align:right;">'+
+					// 表情
+					'<i id="smilebtn" class="fa fa-smile-o" style="font-size:19px;margin-right:15px;"></i>'+
+/*
+					// 图片
+					'<i id="picbtn" class="icon icon-pic" style="font-size:18px;"></i>'+
+					'<form method="POST" enctype="multipart/form-data" style="display:none">'+
+					  '<input id="picup-newth" name="Filedata" class="weui_uploader_input" type="file" '+
+                             'accept="image/jpg,image/jpeg,image/png,image/gif">'+
+					'</form>'+
+*/
+				'</div></div>'+
 				'<div class="weui_cell weui_vcode" style="display:'+seccode_display+'">'+
 					'<div class="weui_cell_bd weui_cell_primary" id="secdiv"></div>'+
 					'<div class="weui_cell_ft" id="secimg"></div>'+
 				'</div>'+
-            '</div>'
+            '</div>'+
+			require('common/copyright').footer()
 		});
 		h5page.on("open", function(){
 			form.create();
 			require('common/seccode').create('secimg','width:150px;');
 			form.reset();
+			jQuery('#smilebtn').unbind('click').click(function(){require('common/smiley').open('contentdivtxt')});
 		});
     };
 
@@ -68,6 +82,7 @@ define(function(require){
 
 	o.submit = function() {
 		var data = form.getData();
+		data.message = get_text_value('contentdivtxt');
 		//data.tid = tid;
 		//data.fid = 42;
 		data.formhash = formhash;

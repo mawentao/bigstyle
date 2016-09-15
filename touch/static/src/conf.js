@@ -8,7 +8,7 @@ define(function(require){
 		// 日志级别 0:关闭;>=1:WARN;>=2:INFO;>=3DEBUG;
 	    loglevel: 3,
 	    // 模板版本
-	    version: '1.8.0',
+	    version: '1.9.0',
 		// 插件类型(0:未装插件,1:纯论坛版,2:门户版,3:广告版)
 		plugin_type: 0,
         plugin_version: 0,

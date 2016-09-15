@@ -20,7 +20,7 @@ define(function(require){
 		form.addField('message', new MWT.TextField({
 			type:'textarea',
 			render: 'contentdiv',
-            style: 'width:100%;height:170px;',
+            style: 'width:100%;height:150px;',
 			value: '',
 			placeholder: '说点什么吧~',
 			errmsg: '内容不能超过1000个字符',
@@ -38,61 +38,78 @@ define(function(require){
 			    checkfun: function(v){return v.length<=1024;}
 		    }));
 		}
-
-		h5page = new MWT.H5Page({
-            render: 'page-forum-'+fid,
-            header: common_header.createHeader({ items:[
-				{icon:'icon icon-left',iconStyle:'font-size:20px;margin-top:5px;',width:40,handler:function(){
-					require("common/location").back("forum.php?forumlist=1");
-                }},
-				{label:'<h1>发新帖</h1>'},
-                {label:'发帖',width:40,handler:o.submit}
-			]}),
-			bodyStyle: "background-color:#f2f2f2;padding:0;",
-			pagebody: '<div class="weui_cells weui_cells_form" style="margin-top:0;">'+
+		var pagebody = '<div class="weui_cells weui_cells_form" style="margin-top:40px;">'+
+				// 版块选择
 				'<div class="weui_cell weui_cell_select">'+
                   '<div class="weui_cell_bd weui_cell_primary">'+
                     '<select class="weui_select" id="forumsel"></select>'+
                   '</div>'+
                 '</div>'+
+				// 主题分类选择
 				'<div class="weui_cell weui_cell_select" id="typeseldiv" style="display:none;">'+
                   '<div class="weui_cell_bd weui_cell_primary">'+
                     '<select class="weui_select" id="typesel"></select>'+
                   '</div>'+
                 '</div>'+
-				'<div class="weui_cell"><div class="weui_cell_bd weui_cell_primary" id="titlediv"></div></div>'+
-				'<div class="weui_cell"><div class="weui_cell_bd weui_cell_primary" id="contentdiv"></div></div>'+
-				'<div class="weui_cell"><div class="weui_cell_bd weui_cell_primary">'+
-///*
+				// 标题
+				'<div class="weui_cell">'+
+				  '<div class="weui_cell_bd weui_cell_primary" id="titlediv"></div>'+
+                '</div>'+
+				// 正文
+				'<div class="weui_cell" style="padding-bottom:0;">'+
+					'<div class="weui_cell_bd weui_cell_primary" id="contentdiv"></div>'+
+				'</div>'+
+				// 工具栏
+				'<div class="weui_cell" style="padding:5px 15p"><div class="weui_cell_bd weui_cell_primary" style="text-align:right;">'+
+					// 表情
+					'<i id="smilebtn" class="fa fa-smile-o" style="font-size:19px;margin-right:15px;"></i>'+
+					// 图片
+					'<i id="picbtn" class="icon icon-pic" style="font-size:18px;"></i>'+
+					'<form method="POST" enctype="multipart/form-data" style="display:none">'+
+					  '<input id="picup-newth" name="Filedata" class="weui_uploader_input" type="file" '+
+                             'accept="image/jpg,image/jpeg,image/png,image/gif">'+
+					'</form>'+
+				'</div></div>'+
+				// 上传的图片附件
+				'<div style="padding:5px 15px;"><div class="weui_cell_bd weui_cell_primary">'+
 					'<div class="weui_uploader"><div class="weui_uploader_bd">'+
 					  '<ul id="attaul" class="weui_uploader_files mwt-imgup-ul" style="display:block;"></ul>'+
-					  '<div class="weui_uploader_input_wrp">'+
-						'<form method="POST" enctype="multipart/form-data"></form>'+
-                          '<input id="picup-newth" name="Filedata" class="weui_uploader_input" type="file" accept="image/jpg,image/jpeg,image/png,image/gif">'+
-						'</form>'+
-                      '</div>'+
 					'</div></div>'+
-//*/
 				'</div></div>'+
+				// 验证码
 				'<div class="weui_cell weui_vcode" style="display:'+seccode_display+'">'+
 					'<div class="weui_cell_bd weui_cell_primary" id="secdiv"></div>'+
 					'<div class="weui_cell_ft" id="secimg"></div>'+
 				'</div>'+
             '</div>'+
-				require('common/copyright').footer()
+			require('common/copyright').footer();
+		jQuery("body").append(pagebody).css("background","#f2f2f2");
+		
+		// topbar
+		var topbar = require("common/header").createHeader({
+			items: [
+				'back','home',
+			    {label:'<h1>发新帖</h1>'},
+				{label:'',width:30},
+				{label:'发帖',width:50,handler:o.submit}
+			]
 		});
-		h5page.on("open", function(){
-			form.create();
-			require('common/seccode').create('secimg','width:150px;');
-			form.reset();
-			query();
-			jQuery('#attaul').html();
-			jQuery('#picup-newth').change(forumupload);
-		});
+		topbar.create();
+ 
+		// 创建并初始化form
+		form.create();
+		require('common/seccode').create('secimg','width:150px;');
+		form.reset();
+		query();
+		jQuery('#attaul').html();
+		jQuery('#picup-newth').change(forumupload);
+		jQuery('#picbtn').click(function(){mwt.$('picup-newth').click();});
+		jQuery('#smilebtn').click(function(){require('common/smiley').open('contentdivtxt')});
 	};
 
 	// 上传图片附件
 	function forumupload() {
+		mwt.show_loading('上传图片...');
 		jQuery.ajaxFileUpload({
             url: ajax.getAjaxUrl('version=4&module=forumupload&type=image&inajax=yes&infloat=yes&simple=2'),
             secureuri: false,
@@ -101,6 +118,7 @@ define(function(require){
 		    data: {uid:dz.uid, hash:dz.hash},
             timeout: 30000,
             complete: function(res) {
+				mwt.hide_loading();
             	jQuery('#picup-newth').change(forumupload);
             },  
             success: function(res,status) {
@@ -121,7 +139,7 @@ define(function(require){
 				});
             },
             error: function (res, status, e) {
-			    //alert(e);
+			    mwt.alert(e);
             }   
         });
 	};
@@ -158,20 +176,20 @@ define(function(require){
 
 
 	var o={};
-
 	o.open = function(animate,_fid,call) {
 		if (dz.uid==0) {
 			require("member/login").login();
 			return;
 		}
-		if (!h5page) init();
 		fid = _fid ? _fid : 0;
+		if (!h5page) init();
 		callback = call ? call : null;
-		h5page.setAnimate(animate).open();
 	};
 
+	// 提交form
 	o.submit = function() {
 		var data = form.getData();
+		data.message = get_text_value('contentdivtxt');
 		data.fid = get_select_value('forumsel');
 		data.typeid = get_select_value('typesel');
 		data.attachnew = attachnew;

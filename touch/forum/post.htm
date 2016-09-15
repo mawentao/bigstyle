@@ -1,6 +1,9 @@
 <!--{template common/mwt_frame}-->
 <!--{template common/mwt_style}-->
 
+<script src="{$_G['style']['directory']}/../../data/cache/common_smilies_var.js"></script>
+
+
 <!--{if $_GET['action']=='reply'}-->
 <script>
 jQuery(document).ready(function($) {
@@ -11,6 +14,7 @@ jQuery(document).ready(function($) {
 </script>
 <!--{else}-->
 <script>
+var smileyroot = '$_G[siteurl]/static/image/smiley';
 jQuery(document).ready(function($) {
 	require(["jsapp","mwt"],function(jsapp){
 		var fid = "{$_GET['fid']}";

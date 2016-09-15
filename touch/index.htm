@@ -12,13 +12,13 @@ $listarr = array();
 $sql = 'SELECT a.tid,a.author,a.authorid,a.subject,a.dateline,a.views,a.replies,b.attachment,c.name as forum_name '.
        'FROM '.DB::table('forum_thread').' AS a LEFT JOIN '.DB::table('forum_threadimage').' AS b ON a.tid=b.tid '.
        'LEFT JOIN '.DB::table('forum_forum').' AS c ON a.fid=c.fid '.
-       'WHERE a.closed=0';
+       'WHERE a.closed=0 AND a.displayorder>=0';
 //1. 新帖
 $listarr[] = DB::fetch_all($sql.' ORDER BY dateline DESC LIMIT 0,'.$limit);
 //2. 热贴
-$listarr[] = DB::fetch_all($sql.' ORDER BY heats DESC, dateline DESC LIMIT 0,'.$limit);
+$listarr[] = DB::fetch_all($sql.' AND heats>0 ORDER BY heats DESC, dateline DESC LIMIT 0,'.$limit);
 //3. 精华
-$listarr[] = DB::fetch_all($sql.' AND digest>0 ORDER BY digest DESC, dateline DESC LIMIT 0,'.$limit);
+$listarr[] = DB::fetch_all($sql.' AND digest>0 ORDER BY dateline DESC, digest DESC LIMIT 0,'.$limit);
 }
 {loop $listarr $k $list}
 <div id="thread_div_{$k}" style="display:none;margin:0;" class="weui_cells">
